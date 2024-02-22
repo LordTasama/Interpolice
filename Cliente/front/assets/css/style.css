@@ -1,0 +1,23 @@
+.searchIcon{
+    transition: all 0.5s ease;
+}
+.searchIcon:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.start{
+    text-align: start;
+    vertical-align: middle;
+   
+}
+.centered{
+    text-align: center;
+    vertical-align: middle;
+}
+.tableData{
+    width: 100% !important;
+}
+.showPass:hover{
+    cursor: pointer !important;
+}
