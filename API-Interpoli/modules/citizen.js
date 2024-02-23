@@ -1,17 +1,17 @@
 // Microservicio para crear el CRUD de los ciudadanos espaciales
 
-const express = require('express');
+const express = require("express");
 
 const citizen = express.Router();
 
-const cnx = require('./bdata');
+const cnx = require("./bdata");
 
 // Desarrollo del CRUD
 
 // Consultar
 
-citizen.get('/citizen/list', (req, res) => {
-  const query = 'select * from citizen';
+citizen.get("/citizen/list", (req, res) => {
+  const query = "select * from citizen";
   cnx.query(query, (error, data) => {
     try {
       res.status(200).send(data);
@@ -25,10 +25,10 @@ citizen.get('/citizen/list', (req, res) => {
   });
 });
 
-citizen.get('/citizen/find/:id', (req, res) => {
+citizen.get("/citizen/find/:id", (req, res) => {
   const id = req.params.id;
 
-  const query = 'select * from citizen where id = ' + id;
+  const query = "select * from citizen where id = " + id;
   cnx.query(query, (error, data) => {
     try {
       res.status(200).send(data);
@@ -40,33 +40,33 @@ citizen.get('/citizen/find/:id', (req, res) => {
 
 // Insertar un ciudadano
 
-citizen.post('/citizen/create', (req, res) => {
+citizen.post("/citizen/create", (req, res) => {
   let frmdata = req.body;
 
-  const query = 'insert into citizen set ?';
+  const query = "insert into citizen set ?";
 
   cnx.query(query, frmdata, (error, data) => {
     try {
-      res.status(200).send('Ciudadano insertado exitosamente');
+      res.status(200).send({ Mensaje: "Ciudadano insertado exitosamente" });
     } catch (error) {
       console.log(error);
     }
   });
 });
 
-citizen.put('/citizen/update/:id', (req, res) => {
+citizen.put("/citizen/update/:id", (req, res) => {
   let frmdata = req.body;
 
-  const query = 'update citizen set ? where id=?';
+  const query = "update citizen set ? where id=?";
 
   cnx.query(query, [frmdata, req.params.id], (error, data) => {
     try {
-      res.status(200).send('Ciudadano actualizado exitosamente');
+      res.status(200).send({ Mensaje: "Ciudadano actualizado exitosamente" });
     } catch (error) {
       res.status(404).send({
-        codigo: 'Error',
+        codigo: "Error",
         mensaje:
-          'No es posible ejecutar la consulta, verifique que la información sea correcta',
+          "No es posible ejecutar la consulta, verifique que la información sea correcta",
         id: error.code,
         mensaje: error.message,
       });
@@ -74,20 +74,22 @@ citizen.put('/citizen/update/:id', (req, res) => {
   });
 });
 
-citizen.delete('/citizen/delete/:id', (req, res) => {
+citizen.delete("/citizen/delete/:id", (req, res) => {
   const id = req.params.id;
-  const query = 'delete from citizen where id = ' + id;
+
+  const query = "delete from citizen where id = " + id;
+
   cnx.query(query, (error, data) => {
     try {
       if (data.affectedRows == 0) {
         res.status(200).send({
-          status: 'correct',
-          message: 'El ciudadano no existe en la base de datos',
+          status: "correct",
+          message: "El ciudadano no existe en la base de datos",
         });
       } else {
         res.status(200).send({
-          status: 'correct',
-          message: 'Ciudadano borrado exitosamente',
+          status: "correct",
+          message: "Ciudadano borrado exitosamente",
         });
       }
     } catch (error) {

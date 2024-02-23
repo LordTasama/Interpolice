@@ -44,7 +44,12 @@
 
   async function getOnlyOne(id, pass) {
     try {
-      const response = await fetch("http://localhost:3000/user/find/" + id);
+      const response = await fetch("http://localhost:3000/user/find/" + id, {
+        headers: {
+          Authorization: JSON.parse(localStorage.getItem("token")).token,
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
@@ -63,7 +68,12 @@
 
   async function getData() {
     try {
-      const response = await fetch("http://localhost:3000/user/list");
+      const response = await fetch("http://localhost:3000/user/list", {
+        headers: {
+          Authorization: JSON.parse(localStorage.getItem("token")).token,
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
@@ -212,17 +222,36 @@
   deleteUser.addEventListener("click", () => {
     fetch("http://localhost:3000/user/delete/" + idEditDelete, {
       method: "DELETE",
-    });
-
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usuario eliminado correctamente",
-      showConfirmButton: false,
-      timer: 1500,
-    }).then(() => {
-      location.href = "./table-user.html";
-    });
+      headers: {
+        Authorization: JSON.parse(localStorage.getItem("token")).token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.Codigo) {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title:
+              "La sesión expiró o algo ocurrió... Intenta iniciar sesión de nuevo",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            location.href = "auth-login-basic.html";
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Usuario eliminado correctamente",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            location.href = "./table-user.html";
+          });
+        }
+      });
   });
 
   editUser.addEventListener("click", async () => {
@@ -244,7 +273,10 @@
         if (editEmail.value.includes("@") && editEmail.value.includes(".")) {
           fetch("http://localhost:3000/user/update/" + idEditDelete, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: JSON.parse(localStorage.getItem("token")).token,
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({
               name: editName.value,
               lastname: editLastname.value,
@@ -253,16 +285,32 @@
               password: hash,
               photo: editPhoto.value,
             }),
-          });
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Usuario actualizado correctamente",
-            showConfirmButton: false,
-            timer: 1500,
-          }).then(() => {
-            location.href = "./table-user.html";
-          });
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              if (res.Codigo) {
+                Swal.fire({
+                  position: "center",
+                  icon: "error",
+                  title:
+                    "La sesión expiró o algo ocurrió... Intenta iniciar sesión de nuevo",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  location.href = "auth-login-basic.html";
+                });
+              } else {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Usuario actualizado correctamente",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  location.href = "./table-user.html";
+                });
+              }
+            });
         } else {
           Swal.fire({
             position: "center",
@@ -276,7 +324,10 @@
         if (editEmail.value.includes("@") && editEmail.value.includes(".")) {
           fetch("http://localhost:3000/user/update/" + idEditDelete, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: JSON.parse(localStorage.getItem("token")).token,
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({
               name: editName.value,
               lastname: editLastname.value,
@@ -285,16 +336,32 @@
               password: editPassword.value,
               photo: editPhoto.value,
             }),
-          });
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Usuario actualizado correctamente",
-            showConfirmButton: false,
-            timer: 1500,
-          }).then(() => {
-            location.href = "./table-user.html";
-          });
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              if (res.Codigo) {
+                Swal.fire({
+                  position: "center",
+                  icon: "error",
+                  title:
+                    "La sesión expiró o algo ocurrió... Intenta iniciar sesión de nuevo",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  location.href = "auth-login-basic.html";
+                });
+              } else {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Usuario actualizado correctamente",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(() => {
+                  location.href = "./table-user.html";
+                });
+              }
+            });
         } else {
           Swal.fire({
             position: "center",
@@ -332,7 +399,10 @@
       if (postEmail.value.includes("@") && postEmail.value.includes(".")) {
         fetch("http://localhost:3000/user/create/", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            Authorization: JSON.parse(localStorage.getItem("token")).token,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             name: postName.value,
             lastname: postLastname.value,
@@ -341,21 +411,37 @@
             password: postPassword.value,
             photo: postPhoto.value,
           }),
-        });
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Usuario registrado correctamente",
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          location.href = "./table-user.html";
-        });
-        postName.value = "";
-        postLastname.value = "";
-        postRank.selectedIndex = 0;
-        postEmail.value = "";
-        postPassword.value = "";
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.Codigo) {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title:
+                  "La sesión expiró o algo ocurrió... Intenta iniciar sesión de nuevo",
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(() => {
+                location.href = "auth-login-basic.html";
+              });
+            } else {
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Usuario registrado correctamente",
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(() => {
+                location.href = "./table-user.html";
+              });
+              postName.value = "";
+              postLastname.value = "";
+              postRank.selectedIndex = 0;
+              postEmail.value = "";
+              postPassword.value = "";
+            }
+          });
       } else {
         Swal.fire({
           position: "center",

@@ -1,15 +1,15 @@
 // Microservicio para crear el CRUD de los ciudadanos espaciales
 
-const express = require('express');
+const express = require("express");
 const history = express.Router();
-const cnx = require('./bdata');
+const cnx = require("./bdata");
 
 // Desarrollo del CRUD
 
 // Consultar
 
-history.get('/history/list', (req, res) => {
-  const query = 'select * from history order by date';
+history.get("/history/list", (req, res) => {
+  const query = "select * from history order by date";
   cnx.query(query, (error, data) => {
     try {
       res.status(200).send(data);
@@ -23,10 +23,10 @@ history.get('/history/list', (req, res) => {
   });
 });
 
-history.get('/history/find/:id', (req, res) => {
+history.get("/history/find/:id", (req, res) => {
   const id = req.params.id;
 
-  const query = 'select * from history where id = ' + id;
+  const query = "select * from history where id = " + id;
   cnx.query(query, (error, data) => {
     try {
       res.status(200).send(data);
@@ -38,48 +38,48 @@ history.get('/history/find/:id', (req, res) => {
 
 // Insertar un ciudadano
 
-history.post('/history/create', (req, res) => {
+history.post("/history/create", (req, res) => {
   let frmdata = req.body;
 
-  const query = 'insert into history set ?';
+  const query = "insert into history set ?";
 
   cnx.query(query, frmdata, (error, data) => {
     try {
-      res.status(200).send('Historial insertado exitosamente');
+      res.status(200).send({ Mensaje: "Historial insertado exitosamente" });
     } catch (error) {
       console.log(error);
     }
   });
 });
 
-history.put('/history/update/:id', (req, res) => {
+history.put("/history/update/:id", (req, res) => {
   let frmdata = req.body;
 
-  const query = 'update history set ? where id=?';
+  const query = "update history set ? where id=?";
 
   cnx.query(query, [frmdata, req.params.id], (error, data) => {
     try {
-      res.status(200).send('Historial actualizado exitosamente');
+      res.status(200).send({ Mensaje: "Historial actualizado exitosamente" });
     } catch (error) {
       console.log(error);
     }
   });
 });
 
-history.delete('/history/delete/:id', (req, res) => {
+history.delete("/history/delete/:id", (req, res) => {
   const id = req.params.id;
-  const query = 'delete from history where id = ' + id;
+  const query = "delete from history where id = " + id;
   cnx.query(query, (error, data) => {
     try {
       if (data.affectedRows == 0) {
         res.status(200).send({
-          status: 'correct',
-          message: 'El historial no existe en la base de datos',
+          status: "correct",
+          message: "El historial no existe en la base de datos",
         });
       } else {
         res.status(200).send({
-          status: 'correct',
-          message: 'Historial borrado exitosamente',
+          status: "correct",
+          message: "Historial borrado exitosamente",
         });
       }
     } catch (error) {
