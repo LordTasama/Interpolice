@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 17-02-2024 a las 23:26:24
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: localhost
+-- Tiempo de generación: 29-02-2024 a las 00:41:12
+-- Versión del servidor: 8.0.30
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `interpolice`
 --
+CREATE DATABASE IF NOT EXISTS `interpolice` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE `interpolice`;
 
 -- --------------------------------------------------------
 
@@ -28,12 +30,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `citizen` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `lastname` varchar(50) NOT NULL,
-  `nickname` varchar(20) DEFAULT NULL,
-  `email` varchar(150) NOT NULL,
-  `type` int(1) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastname` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nickname` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `type` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -145,11 +147,11 @@ INSERT INTO `citizen` (`id`, `name`, `lastname`, `nickname`, `email`, `type`) VA
 --
 
 CREATE TABLE `history` (
-  `id` int(11) NOT NULL,
-  `description` varchar(150) NOT NULL,
+  `id` int NOT NULL,
+  `description` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
   `date` date NOT NULL,
-  `note` varchar(500) NOT NULL,
-  `id_citizen` int(11) NOT NULL
+  `note` varchar(500) COLLATE utf8mb4_general_ci NOT NULL,
+  `id_citizen` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -171,13 +173,13 @@ INSERT INTO `history` (`id`, `description`, `date`, `note`, `id_citizen`) VALUES
 --
 
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `lastname` varchar(50) NOT NULL,
-  `rank` int(1) NOT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `password` varchar(200) NOT NULL,
-  `photo` varchar(200) DEFAULT NULL
+  `id` int NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastname` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `rank` int NOT NULL,
+  `email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
+  `photo` varchar(200) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -185,9 +187,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `lastname`, `rank`, `email`, `password`, `photo`) VALUES
-(6, 'Anderson', 'Tasama', 1, 'tasamaperez2005@gmail.com', '12345', ''),
+(6, 'Anderson', 'Tasama', 1, 'tasamaperez2005@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', ''),
 (7, 'Jhon', 'Pérez', 1, 'tasama@gmail.com', '01cfcd4f6b8770febfb40cb906715822', ''),
-(12, 'Alejo', 'Tobón', 5, 'alejo@gmail.com', '01cfcd4f6b8770febfb40cb906715822', ''),
+(12, 'Alejo', 'Tobón', 5, 'alejo@gmail.com', '01cfcd4f6b8770febfb40cb906715822', 'user-1709137444066_Boku - IMAGE.png'),
 (16, 'Narvaez', 'López', 4, 'narva@gmail.com', 'f0efb5f6cb4ce54821a9c5c6e1dff052', ''),
 (17, 'Anderson', 'Tobón', 1, 'alejo@gmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '');
 
@@ -222,19 +224,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `citizen`
 --
 ALTER TABLE `citizen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT de la tabla `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Restricciones para tablas volcadas

@@ -17,7 +17,7 @@ const port = 3000;
 // Microservicio citizen
 app.use("/", token);
 app.use("/", loginConfirm);
-app.use("/", auth, user);
+app.use("/", user);
 app.use("/", auth, citizen);
 app.use("/", auth, history);
 
