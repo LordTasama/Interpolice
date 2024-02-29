@@ -650,7 +650,7 @@
               <div id="addUserModal" class="modal fade">
                 <div class="modal-dialog">
                   <div class="modal-content">
-                    <form>
+                    <form enctype="multipart/form-data" id="frmUser">
                       <div class="modal-header">
                         <h4 class="modal-title">Registrar usuario</h4>
                         <button
@@ -669,6 +669,7 @@
                             type="text"
                             class="form-control"
                             id="postName"
+                            name="name"
                             required
                           />
                         </div>
@@ -678,6 +679,7 @@
                             type="text"
                             class="form-control"
                             id="postLastname"
+                            name="lastname"
                             required
                           />
                         </div>
@@ -697,6 +699,7 @@
                             type="email"
                             class="form-control"
                             id="postEmail"
+                            name="email"
                             required
                           />
                         </div>
@@ -707,6 +710,7 @@
                               type="password"
                               class="form-control"
                               id="postPassword"
+                              name="password"
                               required
                             />
                             <i
@@ -725,7 +729,7 @@
                             type="file"
                             class="form-control"
                             id="postPhoto"
-                            disabled
+                            name="photo"
                             required
                           />
                         </div>
@@ -828,7 +832,6 @@
                             type="file"
                             class="form-control"
                             id="editPhoto"
-                            disabled
                             required
                           />
                         </div>

@@ -7,6 +7,7 @@ const md5 = require("js-md5");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const { error } = require("console");
 
 // Configuración del multer: creación del espacio de almacenamiento en el servidor
 
@@ -68,12 +69,47 @@ user.get("/user/find/:id", (req, res) => {
 
 // Insertar un usuario
 
-user.post("/user/create", (req, res) => {
+user.post("/user/create", upload.single("photo"), (req, res) => {
   let frmdata = req.body;
+
   let hash = md5.create();
   hash.update(frmdata.password);
   hash.hex();
   frmdata.password = hash;
+
+  if (req.file) {
+    let file = req.file.originalname;
+    let extension = file.includes(".png")
+      ? true
+      : false || file.includes(".jpg")
+      ? true
+      : false || file.includes(".jpeg")
+      ? true
+      : false;
+
+    if (!extension) {
+      fs.unlink(req.file.path, (error) => {
+        res.status(404).send({
+          status: "error",
+          Mensaje:
+            "Formato de archivo no válido, asegurese de que este sea jpg, jpeg o png",
+        });
+      });
+      return true;
+    } else {
+      let photo = req.file.filename;
+
+      frmdata.photo = photo;
+    }
+  } else {
+    res.status(404).send({
+      status: "error",
+      Mensaje:
+        "No existe ningún archivo asegúrese de que lo envío correctamente",
+    });
+    return true;
+  }
+
   const query = "insert into user set ?";
 
   cnx.query(query, frmdata, (error, data) => {
@@ -91,8 +127,42 @@ user.post("/user/create", (req, res) => {
   });
 });
 
-user.put("/user/update/:id", (req, res) => {
+user.put("/user/update/:id/:route", upload.single("photo"), (req, res) => {
   let frmdata = req.body;
+
+  if (req.file) {
+    let file = req.file.originalname;
+    let extension = file.includes(".jpg")
+      ? true
+      : false || file.includes(".png")
+      ? true
+      : false || file.includes(".jpeg")
+      ? true
+      : false;
+
+    if (!extension) {
+      fs.unlink(req.file.path, (error) => {
+        res.status(404).send({
+          status: "error",
+          Mensaje:
+            "Formato de archivo no válido, asegurese de que este sea jpg, jpeg o png",
+        });
+      });
+      return true;
+    } else {
+      let route = "./media/user/";
+      fs.unlink(route + req.params.route, (error) => {});
+      let photo = req.file.filename;
+      frmdata.photo = photo;
+    }
+  } else {
+    res.status(404).send({
+      status: "error",
+      Mensaje: "No existe el archivo, asegurate de que lo envío correctamente",
+    });
+    return true;
+  }
+
   const query = "update user set ? where id=?";
   cnx.query(query, [frmdata, req.params.id], (error, data) => {
     try {
@@ -136,69 +206,11 @@ user.delete("/user/delete/:id", (req, res) => {
 });
 // Subir imagen, tener el cuenta el middleware de multer que configuramos en el objeto upload
 
-user.put("/user/uploadImage/:id", [upload.single("file")], (req, res, next) => {
-  try {
-    if (!req.file && !req.files) {
-      res
-        .status(404)
-        .send({ status: "error", Mensaje: "No existe el archivo" });
-      return true;
-    }
-    let archivo = req.file.originalname;
-    let extension = archivo.includes(".png")
-      ? true
-      : false || archivo.includes(".jpg")
-      ? true
-      : false || archivo.includes(".jpeg")
-      ? true
-      : false;
-    if (!extension) {
-      fs.unlink(req.file.path, (error) => {
-        res.status(404).send({
-          status: "error",
-          Mensaje:
-            "Extensión inválida para el archivo debe ser .png - .jpg - .jpeg",
-        });
-      });
-    } else {
-      let photo = req.file.filename;
-
-      // Recibir el parámetro ID
-      let id = req.params.id;
-      // Recibimos la imagen a subir
-
-      // Ejecutamos la consulta de actualización de la imagen
-
-      cnx.query(
-        `UPDATE user SET photo = ? where id=?`,
-        [photo, id],
-        (error, data) => {
-          try {
-            res.status(200).send({
-              status: "ok",
-              Mensaje: "Actualización exitosa de la imagen",
-            });
-          } catch (error) {
-            res.status(404).send({
-              status: "error",
-              Mensaje: "Error al actualizar la imagen",
-              error: error.message,
-            });
-          }
-        }
-      );
-    }
-  } catch (error) {
-    res
-      .status(400)
-      .send({ Mensaje: "Error al subir imagen", error: error.message });
-  }
-});
-
 user.get("/user/sendImage/:photo", (req, res) => {
   try {
     const photo = req.params.photo;
     const ruta = "./media/user/" + photo;
+
     fs.access(ruta, (error) => {
       if (!error) {
         res.sendFile(path.resolve(ruta));

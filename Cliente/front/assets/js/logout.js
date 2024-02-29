@@ -1,4 +1,7 @@
 (function () {
+  if (localStorage.length == 0) {
+    localStorage.setItem("token", JSON.stringify({ token: "abc" }));
+  }
   fetch("http://localhost:3000/user/login", {
     headers: {
       Authorization: JSON.parse(localStorage.getItem("token")).token,

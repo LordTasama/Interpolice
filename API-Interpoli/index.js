@@ -8,6 +8,7 @@ const token = require("./modules/token");
 const loginConfirm = require("./modules/login");
 const app = express();
 app.use(express.json());
+
 app.use(cors());
 
 const port = 3000;
@@ -17,7 +18,7 @@ const port = 3000;
 // Microservicio citizen
 app.use("/", token);
 app.use("/", loginConfirm);
-app.use("/", user);
+app.use("/", auth, user);
 app.use("/", auth, citizen);
 app.use("/", auth, history);
 

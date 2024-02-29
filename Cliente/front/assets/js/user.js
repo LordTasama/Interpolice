@@ -390,27 +390,29 @@
     const postEmail = document.querySelector("#postEmail");
     const postPassword = document.querySelector("#postPassword");
     const postPhoto = document.querySelector("#postPhoto");
+
     if (
       postName.value != "" &&
       postLastname.value != "" &&
       postEmail.value != "" &&
-      postPassword.value != ""
+      postPassword.value != "" &&
+      postPhoto.files[0]
     ) {
       if (postEmail.value.includes("@") && postEmail.value.includes(".")) {
+        const FrmData = new FormData();
+        FrmData.append("name", postName.value);
+        FrmData.append("lastname", postLastname.value);
+        FrmData.append("rank", postRank.value);
+        FrmData.append("email", postEmail.value);
+        FrmData.append("password", postPassword.value);
+        FrmData.append("photo", postPhoto.files[0]);
         fetch("http://localhost:3000/user/create/", {
           method: "POST",
           headers: {
             Authorization: JSON.parse(localStorage.getItem("token")).token,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            name: postName.value,
-            lastname: postLastname.value,
-            rank: postRank.value,
-            email: postEmail.value,
-            password: postPassword.value,
-            photo: postPhoto.value,
-          }),
+          body: FrmData,
         })
           .then((res) => res.json())
           .then((res) => {
@@ -433,7 +435,7 @@
                 showConfirmButton: false,
                 timer: 1500,
               }).then(() => {
-                location.href = "./table-user.html";
+                //location.href = "./table-user.html";
               });
               postName.value = "";
               postLastname.value = "";
